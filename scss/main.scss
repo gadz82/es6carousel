@@ -24,8 +24,34 @@ carousel-component {
     font: bold 30px sans-serif;
   }
   .slide{
-    img{
-      width: 100%;
+    margin: 0 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 4px #ccc;
+    figure{
+      min-height: 150px;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+      figcaption{
+        margin-top: -27px;
+        background: rgba(0,0,0,0.5);
+        color: #fff;
+        display: block;
+        width: auto;
+        position: absolute;
+        padding: 3px;
+        width:394px;
+        &.right{
+          right:0px;
+        }
+      }
+      img{
+        width: 100%;
+        min-height: 150px;
+      }
+    }
+    h4{
+      margin: 0px 5px 20px;
     }
 
   }

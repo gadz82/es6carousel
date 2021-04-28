@@ -211,7 +211,7 @@ class CarouselInitializer {
 
     for (let i = 0; i < promises.length; i++) {
       for (let n = 0; n < chunkSize; n++) {
-        this.cards[("" + (i + 1) + n)] = '<div class="loading" id="slide-' + ("" + (i + 1) + n) + '">' + this.cardPlaceholder + '</div>';
+        this.cards[("" + (i + 1) + n)] = '<div class="slide loading" id="slide-' + ("" + (i + 1) + n) + '">' + this.cardPlaceholder + '</div>';
       }
     }
     return Object.keys(this.cards).map((key) => [this.cards[key]]);
@@ -257,12 +257,14 @@ class CarouselInitializer {
 
       promises[i].then(rs => {
         for (let n = 0; n < chunkSize; n++) {
-          let h = '' +
+          let h = '<figure>' +
             "      <img src='" + rs[n].image + "'>" +
-            "      <p class='img-label'>"+rs[n].type+"<span>"+this.dateForHumans(rs[n].duration)+"</span></p>\n" +
+            "<figcaption>"+rs[n].type+" - "+this.dateForHumans(rs[n].duration)+"</figcaption>"+
+              "</figure>" +
             "      <h4>" + rs[n].title + "</h4>\n" +
             "    ";
 
+          document.getElementById("slide-" + (i + 1) + n).classList.remove("loading")
           document.getElementById("slide-" + (i + 1) + n).innerHTML = h
         }
       })
