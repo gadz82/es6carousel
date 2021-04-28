@@ -1,0 +1,31 @@
+html {
+  font-family: -apple-system, system-ui, sans-serif; }
+
+carousel-component {
+  overflow-x: auto;
+  display: flex;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; }
+  carousel-component::-webkit-scrollbar {
+    display: none; }
+  carousel-component div {
+    margin: 0 2px;
+    flex: 0 0 400px;
+    scroll-snap-align: center; }
+  carousel-component section {
+    margin: 0 2px;
+    flex: 0 0 90vw;
+    scroll-snap-align: center; }
+  carousel-component text {
+    font: bold 30px sans-serif; }
+  carousel-component .slide img {
+    width: 100%; }
+
+button {
+  font-size: 1em;
+  padding: .5em;
+  color: #333;
+  border-radius: 2px; }
+
+/*# sourceMappingURL=main.css.map */

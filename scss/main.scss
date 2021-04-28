@@ -1,0 +1,38 @@
+html {
+  font-family: -apple-system, system-ui, sans-serif;
+}
+carousel-component {
+  overflow-x: auto;
+  display: flex;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  div {
+    margin: 0 2px;
+    flex: 0 0 400px;
+    scroll-snap-align: center;
+  }
+  section {
+    margin: 0 2px;
+    flex: 0 0 90vw;
+    scroll-snap-align: center;
+  }
+  text {
+    font: bold 30px sans-serif;
+  }
+  .slide{
+    img{
+      width: 100%;
+    }
+
+  }
+}
+button {
+  font-size: 1em;
+  padding: .5em;
+  color: #333;
+  border-radius: 2px;
+}
