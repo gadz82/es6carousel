@@ -1,5 +1,8 @@
 let observer;
 
+/**
+ * Create Custom HTML Element
+ */
 class Carousel extends HTMLElement {
 
   constructor() {
@@ -7,14 +10,24 @@ class Carousel extends HTMLElement {
     this.scrollBehavior = "smooth";
   }
 
+  /**
+   * @returns {string[]}
+   */
   static get observedAttributes() {
     return ["index"];
   }
 
+  /**
+   * Getter index -> observed
+   * @returns {number}
+   */
   get index() {
     const total = this.children.length - 1;
     const slides = this.children;
 
+    /**
+     * Loop slides and calc offset
+     */
     for (let index = 0; index < total; index++) {
       const slide = slides[index];
       const scroll = Math.round(slide.offsetLeft - this.clientWidth / 2);
@@ -30,6 +43,10 @@ class Carousel extends HTMLElement {
     return total;
   }
 
+  /**
+   * Index setter
+   * @param index
+   */
   set index(index) {
     if (typeof index !== "number" || Math.round(index) !== index) {
       throw new Error("Invalid index value. It must be an integer");
@@ -40,10 +57,18 @@ class Carousel extends HTMLElement {
     this.target = slides[index];
   }
 
+  /**
+   * Get Target Slide
+   * @returns {Element}
+   */
   get target() {
     return this.children[this.index];
   }
 
+  /**
+   * Set Target Slide
+   * @param target
+   */
   set target(target) {
     if (target.parentElement !== this) {
       throw new Error("The target must be a direct child of this element");
@@ -56,10 +81,18 @@ class Carousel extends HTMLElement {
     this.lastTarget = target;
   }
 
+  /**
+   * Get distance scroll from left
+   * @returns {number}
+   */
   get scrollFromLeft() {
     return this.scrollLeft;
   }
 
+
+  /**
+   * Set distance scroll from left
+   */
   set scrollFromLeft(scroll) {
     try {
       this.scroll({
@@ -71,20 +104,32 @@ class Carousel extends HTMLElement {
     }
   }
 
+  /**
+   * Get distance scroll from right
+   * @returns {number}
+   */
   get scrollFromRight() {
     return this.scrollWidth - this.clientWidth - this.scrollLeft;
   }
 
+  /**
+   * Set distance scroll from right
+   * @param scroll
+   */
   set scrollFromRight(scroll) {
     this.scrollFromLeft = this.scrollWidth - this.clientWidth - scroll;
   }
 
+  /**
+   * Native Html callback
+   */
   connectedCallback() {
     //To calculate the offset of slides relative to the document
     if (getStyleValue(this, "position") === "static") {
       this.style.position = "relative";
     }
 
+    // Bind Keyboard Events
     this.addEventListener("keydown", (e) => {
       switch (e.keyCode) {
         case 37: //left
@@ -112,6 +157,7 @@ class Carousel extends HTMLElement {
       }
       let scrolling;
 
+      /* Scroll via mousewheel */
       function handleScroll() {
         clearTimeout(scrolling);
         scrolling = setTimeout(() => {
@@ -123,7 +169,6 @@ class Carousel extends HTMLElement {
       this.addEventListener("scroll", handleScroll, false);
 
     }
-
 
     //Resize observer
     if (window.ResizeObserver) {
@@ -141,25 +186,32 @@ class Carousel extends HTMLElement {
           }
         });
       }
-
       observer.observe(this);
     }
   }
 
-  disconnectedCallback() {
-    if (observer) {
-      observer.unobserver(this);
-    }
-  }
+  /**
+   * Native Html Callback
+   */
 
+
+
+  /**
+   * Native Html Callback
+   * Reset Index
+   */
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === "index") {
       this.index = parseInt(newValue);
-
     }
   }
 }
 
+/**
+ * Usefull if container is anchored
+ * @param el
+ * @param hash
+ */
 function handleTarget(el, hash) {
   if (!hash) {
     return;
@@ -172,7 +224,12 @@ function handleTarget(el, hash) {
   }
 }
 
-
+/**
+ * Return value by style property for passed element
+ * @param el
+ * @param name
+ * @returns {*}
+ */
 function getStyleValue(el, name) {
   const value = getComputedStyle(el)[name];
 
@@ -181,32 +238,42 @@ function getStyleValue(el, name) {
   }
 }
 
-
+/**
+ * Initializer class
+ */
 class CarouselInitializer {
-
   container
 
-  title
-
-  subtitle
-
-  cards = {}
-
   cardPlaceholder = "<div>\n" +
-    "      <img src=\"https://via.placeholder.com/350x150\">\n" +
-    "      <h4>Loading</h4>\n" +
-    "      <p>Loading</p>\n" +
+    "      <div class='skeleton skeleton-image'></div>\n" +
+    "      <div class='skeleton skeleton-text'></div>\n" +
     "    </div>"
 
+  cards = []
 
-  constructor({container, title, subtitle, fetchCards}) {
+  /**
+   * Initialize class global params
+   * @param container
+   * @param title
+   * @param subtitle
+   * @param icon
+   * @param fetchCards
+   */
+  constructor({container, title, subtitle, icon, fetchCards}) {
     this.container = document.getElementById(container)
     this.title = title
+    this.icon = icon
     this.subtitle = subtitle
     this.fetchCards = fetchCards
     this.render()
   }
 
+  /**
+   * Return object of cards ordered by key
+   * @param promises
+   * @param chunkSize
+   * @returns {[*][]}
+   */
   getCardCollection(promises, chunkSize) {
 
     for (let i = 0; i < promises.length; i++) {
@@ -217,6 +284,11 @@ class CarouselInitializer {
     return Object.keys(this.cards).map((key) => [this.cards[key]]);
   }
 
+  /**
+   * Utility to generate human friendly date
+   * @param seconds
+   * @returns {string}
+   */
   dateForHumans ( seconds ) {
     const levels = [
       [Math.floor(seconds / 31536000), 'y'],
@@ -234,57 +306,84 @@ class CarouselInitializer {
     return returntext.trim();
   }
 
+  /**
+   * Create dom elements and handles changes
+   */
   render() {
     const chunkSize = 3;
     const promises = this.fetchCards(chunkSize)
     const cards = this.getCardCollection(promises, chunkSize)
-
+    console.log(cards);
     this.container.innerHTML = this.container.innerHTML +
       "<div>" +
-      "<h1>" + this.title + "</h1>" +
+      "<div class='intro-container'>" +
+        "<div class='icon'>" +
+          "<span class=\"material-icons\">"+this.icon+"</span>" +
+        "</div>" +
+        "<div class='title'>" +
+          "<h1>" + this.title + "</h1>" +
+          "<p>"+this.subtitle+"</p>" +
+        "</div>" +
+      "</div>" +
       "<carousel-component role=\"region\" aria-label=\"Gallery\" tabindex=\"0\">" +
         cards.join(" ") +
       "</carousel-component>" +
       "</div>"
 
-    this.container.innerHTML = this.container.innerHTML + '<p>\n' +
-      '  <button class="carousel-prev">&larr;</button>\n' +
-      '  <button class="carousel-next">&rarr;</button>\n' +
-      '</p>';
+    this.container.innerHTML = this.container.innerHTML + '<div class="nav">' +
+      '  <button class="carousel-prev"><span class="material-icons">chevron_left</span></button>' +
+      '  <button class="carousel-next"><span class="material-icons">chevron_right</span></button>\n' +
+      '</div>';
 
 
     for (let i = 0; i < promises.length; i++) {
 
       promises[i].then(rs => {
+        console.log()
         for (let n = 0; n < chunkSize; n++) {
-          let h = '<figure>' +
+          const slide = this.container.querySelector("#slide-" + (i + 1) + n);
+          const h = '<figure>' +
             "      <img src='" + rs[n].image + "'>" +
             "<figcaption>"+rs[n].type+" - "+this.dateForHumans(rs[n].duration)+"</figcaption>"+
               "</figure>" +
             "      <h4>" + rs[n].title + "</h4>\n" +
             "    ";
 
-          document.getElementById("slide-" + (i + 1) + n).classList.remove("loading")
-          document.getElementById("slide-" + (i + 1) + n).innerHTML = h
+          slide.classList.remove("loading")
+          slide.classList.add(rs[n].cardinality)
+          slide.innerHTML = h
         }
       })
     }
 
+    /**
+     * Instantiate HTML Custom Object
+     */
+    (function(){
+      if(!customElements.get("carousel-component")){
+        customElements.define("carousel-component", Carousel);
+      }
+    })(this.container.id);
+
+    const carousel = this.container.querySelector("carousel-component");
+
+    /**
+     * Nav Buttons
+     * @type {Element}
+     */
     const nextButton = this.container.querySelector(".carousel-next"),
       prevButton = this.container.querySelector(".carousel-prev")
+    let cIndex = carousel.index;
 
-
-    customElements.define("carousel-component", Carousel);
-    const carousel = document.querySelector("carousel-component");
-
+    //Nav Button status
     const checkButtonAvailability = () => {
 
-      if (carousel.index == 1) {
+      if (cIndex == 1) {
         prevButton.setAttribute('disabled', true);
       } else {
         if (prevButton.hasAttribute('disabled')) prevButton.removeAttribute('disabled');
       }
-      if (carousel.index == cards.length - 1) {
+      if (cIndex == cards.length - 1) {
         nextButton.setAttribute('disabled', true);
       } else {
         if (nextButton.hasAttribute('disabled')) nextButton.removeAttribute('disabled');
@@ -296,8 +395,8 @@ class CarouselInitializer {
     nextButton.addEventListener(
       "click",
       () => {
-        console.log(carousel.index)
         carousel.index += 1
+        cIndex += 1
         checkButtonAvailability()
       },
     );
@@ -306,6 +405,7 @@ class CarouselInitializer {
       "click",
       () => {
         carousel.index -= 1
+        cIndex -= 1
         checkButtonAvailability()
       },
     );

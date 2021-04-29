@@ -1,5 +1,47 @@
+$base-color: #ddd;
+$shine-color: #e8e8e8;
+$avatar-offset: 52 + 16;
+@mixin background-gradient{
+  background-image: linear-gradient(90deg, $base-color 0px, $shine-color 40px, $base-color 80px);
+  background-size: 600px;
+}
+
+@keyframes shine-avatar{
+
+  0% {
+    background-position:- 100 px + $avatar-offset;
+  }
+  40%, 100% {
+    background-position: 140px + $avatar-offset;
+  }
+}
+
 html {
   font-family: -apple-system, system-ui, sans-serif;
+}
+body{
+  margin:0;
+}
+.intro-container{
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width:100%;
+  .icon{
+    order: 1;
+    display: inline-block;
+    float:left;
+    padding:0 30px;
+  }
+  .title{
+    order: 2;
+    display: inline-block;
+    h1{
+      margin:10px 0;
+    }
+  }
+
 }
 carousel-component {
   overflow-x: auto;
@@ -7,6 +49,7 @@ carousel-component {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  padding-bottom:30px;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -14,6 +57,19 @@ carousel-component {
     margin: 0 2px;
     flex: 0 0 400px;
     scroll-snap-align: center;
+  }
+  .skeleton{
+    width:100%;
+    margin:0;
+    margin-bottom: 15px;
+    @include background-gradient;
+    animation: shine-avatar 1s infinite linear;
+    &.skeleton-image{
+      height: 150px;
+    }
+    &.skeleton-text{
+      height: 35px;
+    }
   }
   section {
     margin: 0 2px;
@@ -27,6 +83,9 @@ carousel-component {
     margin: 0 10px;
     border: 1px solid #ccc;
     box-shadow: 0 0 4px #ccc;
+    &.collection{
+      box-shadow: 0px 7px 8px #333;
+    }
     figure{
       min-height: 150px;
       margin-left: 0;
@@ -37,7 +96,6 @@ carousel-component {
         background: rgba(0,0,0,0.5);
         color: #fff;
         display: block;
-        width: auto;
         position: absolute;
         padding: 3px;
         width:394px;
@@ -56,9 +114,12 @@ carousel-component {
 
   }
 }
-button {
-  font-size: 1em;
+button{
+  font-size: 2em;
   padding: .5em;
   color: #333;
   border-radius: 2px;
+  &.carousel-next{
+    float:right;
+  }
 }

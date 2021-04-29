@@ -3,32 +3,19 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
-  <meta name="description" content="">
+  <title>ES6 Carousle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-  <!-- Place favicon.ico in the root directory -->
-
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="scss/main.css">
-
-  <meta name="theme-color" content="#fafafa">
-
-
   <script src="js/main.js"></script>
 </head>
 
 <body>
-<h1>Demo carousel</h1>
 
 <div>
   <div id="my-carousel"></div>
+  <div id="my-carousel3"></div>
   <script type="text/javascript">
     const items = [
       {
@@ -128,6 +115,7 @@
     const option1 = {
       container : "my-carousel",
       title : "Fresh Meat...",
+      icon : "view_quilt",
       subtitle : "Lorem Ipsum ... ",
       fetchCards : (chunkSize) => {
         const promises = [];
@@ -147,6 +135,123 @@
       }
     };
     const carousel1 = new CarouselInitializer(option1)
+  </script>
+
+
+  <script type="text/javascript">
+    const items2 = [
+      {
+        image : "https://picsum.photos/350/150",
+        type : "miao",
+        duration : 3600,
+        title : "E-Learning Test Title",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "bau",
+        duration : 4200,
+        title : "Remote Working Test Title",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "cooking",
+        duration : 3600,
+        title : "Cooking Test Title",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "sleep",
+        duration : 3600,
+        title : "Sleeping",
+        cardinality : "collection"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "sing",
+        duration : 3600,
+        title : "Singing",
+        cardinality : "collection"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "coding",
+        duration : 3600,
+        title : "Coding every day",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "elearning",
+        duration : 3600,
+        title : "E-Learning 2",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "remoteworking",
+        duration : 3600,
+        title : "Remote Working 2",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "cooking",
+        duration : 3600,
+        title : "Cooking 2",
+        cardinality : "single"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "sleep",
+        duration : 3600,
+        title : "Sleeping 2",
+        cardinality : "collection"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "sing",
+        duration : 3600,
+        title : "Singing 2",
+        cardinality : "collection"
+      },
+      {
+        image : "https://picsum.photos/350/150",
+        type : "coding",
+        duration : 3600,
+        title : "Coding 2",
+        cardinality : "single"
+      }
+    ];
+
+    const option2 = {
+      container : "my-carousel3",
+      title : "Fresh Meat2...",
+      icon : "view_quilt",
+      subtitle : "Lorem 22Ipsum ... ",
+      fetchCards : (chunkSize) => {
+        const promises = [];
+        const chunks = arrayChunk(items2, chunkSize);
+
+        for(let i = 0; i <= Math.floor((Math.random() * 3) + 1); i++){
+          const chunk = chunks[i]
+          promises.push(
+                  new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                      resolve(chunk)
+                    },430*(i+1))
+                  })
+          )
+        }
+        return promises
+      }
+    };
+    (function(){
+      //customElements.define("carousel-component", Carousel);
+      const carousel2 = new CarouselInitializer(option2)
+    })("my-carousel3");
   </script>
 
 </div>
